@@ -6,6 +6,8 @@ require (
 	github.com/coreos/go-oidc/v3 v3.9.0
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/joho/godotenv v1.5.1
+	github.com/memphisdev/memphis.go v1.3.2
+	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/oauth2 v0.16.0
@@ -22,7 +24,6 @@ require (
 	github.com/hamba/avro/v2 v2.13.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
-	github.com/memphisdev/memphis.go v1.3.2 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
