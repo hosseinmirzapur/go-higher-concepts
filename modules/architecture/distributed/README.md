@@ -66,6 +66,40 @@ Threads provide us multiple utilities:
 
 - Deadlock: The situation where all threads and processes are waiting for eachother causing no progress in the system.
 
-**Web Crawler Example**
+**Web Crawler Section**
 
-to be added...
+- If 2 or more threads are trying to achieve the same functionality inside a program, to make each thread isolated the code should have `Mutex Locks` which lock the first thread running and let it be finished and then let other threads do the same.
+- `sync.WaitGroup`: When we have multiple threads, locks can handle the resource sharing and wait-groups can handle usage-time-sharing, so if we want a thread to do something before the next thread starts doinng the same, we do as below:
+
+```Golang
+
+// define a work-group
+var wg sync.WaitGroup
+
+// before goroutine acts
+wg.Add(1)
+
+// perform the goroutine
+// ...
+// Inside each goroutine
+.
+.
+.
+defer wg.Done()
+.
+.
+.
+// outside of the goroutine, we wait for the goroutines to be done
+wg.Wait()
+
+```
+
+- `go run -race somefile.go` will run the code and examine if any race can happen on goroutines.
+
+- We should pay attention, how many threads are we opening because it may be a lot and not memory-efficient to create unlimited threads as they consume memory per creation.
+
+**Web Crawler with Usage of Channels and Goroutines**
+
+- This approach doesn't need mutex locks. Instead, it requires a channel of URLS, a parent function to read from the channel and a worker function to write into the channel.
+
+- To initiate a channel, a data should be written into it in a separate goroutine, then the channel is ready to be used.
