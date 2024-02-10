@@ -134,3 +134,56 @@ wg.Wait()
 7. All replicas are told to write at offset
 8. If all replicas respond with "YES", then the Primaries are gonna reply "SUCESS" to the client
 9. Otherwise, the Primaries are gonna reply "NO" to the client
+
+### [Lecture 4: Primary-Backup Replication](https://www.youtube.com/watch?v=M_teob23ZzY&list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB&index=4)
+
+**Replication Fault Tolerance**
+
+- If power goes off or network cable accidentally is cut off, replication makes sure the server is still running.
+
+- Bugs in the code, or hardware problems cannot be handled with replication.
+
+**Approaches to Replication**
+
+- There are 2 approaches to consider:
+
+1. State Transfer: Transfers primary state to the disk (mainly states which were stored in RAM)
+2. Replicated State Machine (Stores the replicated server's events on disk)
+
+**Main Bottlenecks**
+
+- How much staate transfer should happen
+
+> Note: It is usually the whole system's state, even if it's very big (becuase of the consistency of the data)
+- How closely can Primary and Backup data be?
+- Which state transfer approach to use (considering one is more robust and one is more effective)
+- How to handle anomalies
+- Is it convenient to stay with the current setup or create a new replica which requires costs
+
+**Virtual Machine Fault Tolerance - VM FT**
+
+- It consists of 2 parts:
+
+1. Virtual Machine Monitor - VMM
+2. OS Kernels
+3. Software running on the OS
+
+- As for replication we have at least 2 VMs communicating with eachother
+
+- The virual machines for replication are usually a pair to handle `Primary` and `Backup` data.
+
+- For replication, all the VMs are connected to eachother via LAN along with Clients and Disk Servers. The communicating packets between clients and VMs (both primary and backup) are called `Log Events` which are emitted on a `Log Channel`
+
+- Non-deterministic Events:
+
+1. Inputs from external sources like clients - consisting of network packets(data + interrupt)
+2. Weird Instructions
+3. Multicore Parallelism
+
+- Log Entry Format:
+
+1. Instruction number (instruction number since booting)
+2. Type of instruction
+3. Data
+
+- Output Rule: The primary is not allowed to respond to the client before the backup has acknowledged primary of being done with the data.
