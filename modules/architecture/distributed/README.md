@@ -200,3 +200,57 @@ wg.Wait()
 > Note: Be sure to check the `thread.go` sample codes inside the `lecture-5` directory for this lecture.
 
 
+### [Lecture 6: Fault Tolerance: Raft (1)](https://www.youtube.com/watch?v=64Zp3tzNbpE&list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB&index=6)
+
+- As told before, all the systems mentioned till now (GFS, VMFT, ...) have a mechanism in which one single server acts as the one server which decides the final decision.
+
+- Worst thing about a single server handling everything is that server may become the single point of failure which is called the `Split Brain`.
+
+- One way to deal with the split brain is build an actual network that cannot fail, even if it's an expensive approach to take. Another approach is to use human reviewer over the network but that also may lead to failure due to the human incapability of handling fast tasks maybe too many tasks at the same time.
+
+- Splitting the network in half to make client-server talk to each other is called partitioning.
+
+- The idea to handle automated failure recovery for split brain case, is called `Majority Vote` which means more than half of the servers should vote positive that the network is up. (Something like what bitcoin does)
+
+- If you have 2F+1 servers you can withstand F failures, so if you have 3 servers that means you can withstand 1 server failure and still make sure your network won't break.
+
+***Software Overview of a Single Raft Replica:**
+
+- Layers are as below:
+
+1. A key/value server with a table of keys and values from other servers
+
+2. Raft Layer containing logs of operation and chitchat between itself and the key/value server layer.
+
+- What happens inside of a Raft:
+
+1. Client sends request to the server
+
+2. K/V layer (application layer) sends the request log to the Raft layer
+
+3. Rafts chit-chat with eachother which each one is located inside different replicas
+
+4. When the data is stored inside each replica and their logs, the primary raft sends a notification up to the application layer letting it know the data is persisted completely
+
+5. When the notification is sent on the leader server, all replicas send raft data to the k-v table to be stored.
+
+![key-value-raft](key-value-raft.png)
+
+
+- How does a leader get selected in the first place:
+
+1. The system has an election timer
+
+2. Whenever the timer exceeds its limit and the leader is expired, the system decides to do election to find a new leader in the servers
+
+
+- Example:
+
+|          | Log Data | Term # |
+| -------- | -------- | ------ |
+| Server 1 | 3        |        |
+| Server 2 | 3        | 3      |
+| Server 3 | 3        | 3      |
+
+> This may happen if server 2 or 3 crashed on sending data to server 1
+
