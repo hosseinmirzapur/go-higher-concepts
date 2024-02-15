@@ -187,3 +187,16 @@ wg.Wait()
 3. Data
 
 - Output Rule: The primary is not allowed to respond to the client before the backup has acknowledged primary of being done with the data.
+
+### [Lecture 5: Go, Threads, and Raft](https://www.youtube.com/watch?v=UzzcUS2OHqo&list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB&index=5)
+
+- Shared variables need to be protected by lock mechanism or channels.
+
+**Conditional Variable Pattern**
+
+- When we have shared variables between threads and all threads are trying to reach a certain condition, mutating the shared variable, to check for the condition we use `cond sync.Cond` and pass the shared `mu sync.Mutex` pointer to it, and whenever the state of the shared variable is changes inside each goroutine, we will do `cond.Broadcast` to share the variable state and condition checks between all the goroutines. The waiting process to get the condition to be true, is done by `cond.Wait()` syntax.
+
+
+> Note: Be sure to check the `thread.go` sample codes inside the `lecture-5` directory for this lecture.
+
+
